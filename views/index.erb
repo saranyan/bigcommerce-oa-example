@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map-canvas { height: 100% }
+      .labels {
+         color: red;
+         background-color: white;
+         font-family: "Lucida Grande", "Arial", sans-serif;
+         font-size: 10px;
+         font-weight: bold;
+         text-align: center;
+         width: auto;     
+         border: 2px solid black;
+         white-space: nowrap;
+       }
+    </style>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAhghioAid5DsmtX1M4F0Gki9ZRzNwxxDY&sensor=false">
+    </script> 
+    <script type="text/javascript" src="https://google-maps-utility-library-v3.googlecode.com/svn/tags/markerwithlabel/1.0.1/src/markerwithlabel.js"></script>
+ 
+    <script type="text/javascript">
+    
+      function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(37.09024, -95.712891),
+          zoom: 4,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+       
+        var map = new google.maps.Map(document.getElementById("map-canvas"),
+            mapOptions);
+        
+        //console.log(mark_array)
+         <% @p.each do |p| %>
+          console.log(<%= p["lat"]%>, <%= p["lng"] %>)
+          var myLatlng = new google.maps.LatLng(<%= p["lat"]%>, <%= p["lng"] %>);
+          var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map,
+            title:"Order"
+          });
+           var markerlabel = new MarkerWithLabel({
+             position: myLatlng,
+             draggable: true,
+             map: map,
+             labelContent: "id: "+ '<%= p["id"].to_s %>' + ", name: " + '<%= p["name"] %>',
+             labelAnchor: new google.maps.Point(22, 0),
+             labelClass: "labels", // the CSS class for the label
+             labelStyle: {opacity: 0.75}
+           });
+          <% end %>
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"/>
+  </body>
+</html>
